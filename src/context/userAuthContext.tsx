@@ -1,5 +1,5 @@
-import { createContext, useState } from "react";
-import { GoogleAuthProvider, User, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import { createContext, useEffect, useState, useContext } from "react";
+import { GoogleAuthProvider, User, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
 
@@ -41,8 +41,20 @@ export const userAuthContext = createContext<AuthContextData>({
 
 
 //Use the UserAuthProvider to wrap out app comp to it 
-export const UserAuthProvider: React.FunctionComponent<IUserAuthProviderProps> = {{ children }} => {
+export const UserAuthProvider: React.FunctionComponent<IUserAuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if(user) {
+                console.log("The Logged in user state is:", user);
+                setUser(user);
+            }
+            return () => {
+                unsubscribe();
+            };
+        });
+    });
 
     const value: AuthContextData = {
         user,
@@ -55,5 +67,9 @@ export const UserAuthProvider: React.FunctionComponent<IUserAuthProviderProps> =
         <userAuthContext.Provider value={value}>
             {children}
         </userAuthContext.Provider>
-    )
-}
+    );
+};
+
+export const useUserAuth = () => {
+    return useContext(userAuthContext);
+};

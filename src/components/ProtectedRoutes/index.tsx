@@ -1,4 +1,3 @@
-import { useUserAuth } from '@/context/userAuthContext';
 import * as React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';

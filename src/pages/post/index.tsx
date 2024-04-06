@@ -26,7 +26,7 @@ const PublishPost: React.FunctionComponent<IPublishPostProps> = () => {
     });
     const handleSubmit = async(e: React.MouseEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Uploaded File Entry:", fileEntry)
+        console.log("Uploaded File Entry:", fileEntry.files)
         console.log("The create post is:", post);
     }
     return (

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import * as LR from '@uploadcare/blocks';
 import blocksStyles from '@uploadcare/blocks/web/lr-file-uploader-regular.min.css?url';
 import { FileEntry } from './../../types/index';
@@ -15,9 +15,10 @@ const FileUploader: React.FunctionComponent<IFileUploaderProps> = ({fileEntry, o
     const [uploadedFiles, setUploadedFiles] = useState<OutputFileEntry<'success'>[]>([]);
     const ctxProviderRef = useRef<InstanceType<LR.UploadCtxProvider>>(null);
 
-    const handleRemoveClick = () => {
-        console.log("Is clicked:", fileEntry.files);
-    };
+    const handleRemoveClick = useCallback(
+        (uuid: OutputFileEntry['uuid']) => onChange({files: fileEntry.files.filter(f => f.uuid !== uuid)}),
+        [fileEntry.files, onChange],
+    );
 
     useEffect(() => {
         const ctxProvider = ctxProviderRef.current;
